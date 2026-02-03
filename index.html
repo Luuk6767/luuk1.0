@@ -15,6 +15,7 @@
             --glass: rgba(30, 41, 59, 0.8);
             --text: #f8fafc;
             --success: #22c55e;
+            --danger: #ef4444;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -23,13 +24,11 @@
         header { padding: 2rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         h1 { font-size: 2rem; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Huvudmenyn */
         .main-nav { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
         .tab-btn { padding: 12px 20px; border: none; background: var(--glass); color: #94a3b8; cursor: pointer; border-radius: 12px; font-weight: 700; transition: 0.3s; }
         .tab-btn.active { background: var(--primary); color: white; }
         .tab-btn.sweden-theme.active { background: var(--sweden-blue); border: 2px solid var(--sweden-yellow); }
 
-        /* Under-menyer */
         .sub-nav { display: none; justify-content: center; gap: 10px; margin-bottom: 20px; background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 50px; width: fit-content; margin-left: auto; margin-right: auto; }
         .sub-btn { background: transparent; border: none; color: #94a3b8; cursor: pointer; font-weight: 600; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; }
         .sub-btn.active { background: var(--secondary); color: white; }
@@ -39,14 +38,14 @@
         .content-section { display: none; animation: fadeIn 0.4s ease; }
         .content-section.active { display: block; }
 
-        .card { background: var(--glass); border-radius: 15px; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.1); }
-        .news-tag { color: var(--secondary); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+        .card { background: var(--glass); border-radius: 15px; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden; }
+        .news-tag { color: var(--secondary); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .news-date { font-size: 0.75rem; opacity: 0.5; float: right; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         td, th { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .rank { color: var(--sweden-yellow); font-weight: 800; }
         
-        /* Grupper Grid */
         .group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
         .group-card { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 1rem; border: 1px solid rgba(255,255,255,0.05); }
         .group-title { color: var(--primary); font-weight: 800; margin-bottom: 8px; border-bottom: 1px solid var(--primary); }
@@ -80,10 +79,9 @@
 </div>
 
 <div class="container">
-    
     <section id="players" class="content-section active">
         <div class="card">
-            <h3>Världens bästa spelare just nu</h3>
+            <h3>Världens bästa spelare (Februari 2026)</h3>
             <table>
                 <thead><tr><th>#</th><th>Namn</th><th>Land</th></tr></thead>
                 <tbody id="top-players-list"></tbody>
@@ -95,7 +93,6 @@
         <div id="win-prob" class="ai-content">
             <div class="card">
                 <h3>AI-analys: Favoriter att vinna VM 2026</h3>
-                <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 15px;">Baserat på truppvärde, formkurva och historisk data.</p>
                 <div id="win-list"></div>
             </div>
         </div>
@@ -124,33 +121,36 @@
     <section id="sweden-portal" class="content-section">
         <div id="sweden-news" class="sweden-content">
             <div class="card" style="border-left: 5px solid var(--sweden-yellow);">
-                <span class="news-tag">BREAKING</span>
-                <h3>Isak glödhet i Premier League – sänkte City</h3>
-                <p>Alexander Isak visar storform inför VM-samlingen med två mål mot Manchester City.</p>
+                <span class="news-tag">LIVE - KVAL</span>
+                <h3>Sverige lottas mot Ukraina i Playoff!</h3>
+                <p>Beskedet kom nyss: Sverige möter Ukraina den 26 mars. Vid vinst väntar vinnaren av Polen/Albanien på hemmaplan den 31 mars.</p>
             </div>
         </div>
         <div id="sweden-squad" class="sweden-content" style="display:none;">
             <div class="card">
                 <h3>🇸🇪 Sveriges Nyckelspelare 2026</h3>
-                <table>
-                    <thead><tr><th>Namn</th><th>Klubb</th><th>Status</th></tr></thead>
-                    <tbody id="sweden-players-list"></tbody>
-                </table>
+                <table id="sweden-players-list"></table>
             </div>
         </div>
     </section>
-
 </div>
 
 <script>
-    // Data
+    const globalNews = [
+        { t: "500 miljoner biljettansökningar!", d: "FIFA bekräftar ett rekordstort tryck. Fans meddelas nu i februari om de vunnit lotteriet för sommarens matcher.", tag: "EKONOMI", date: "3 Feb 2026" },
+        { t: "adidas TRIONDA lanserad", d: "Den officiella matchbollen för VM 2026 har presenterats. Designen inspireras av de tre värdnationernas färger.", tag: "PRYLAR", date: "1 Feb 2026" },
+        { t: "Mascot-trion presenterad", d: "Möt Maple (Kanada), Zayu (Mexiko) och Clutch (USA) – de tre officiella maskotarna som ska symbolisera mästerskapet.", tag: "EVENT", date: "31 Jan 2026" },
+        { t: "Hotellkaos i Mexico City", d: "Priserna har stigit med över 900% under öppningsveckan. FIFA varnar för oseriösa aktörer på andrahandsmarknaden.", tag: "RESA", date: "28 Jan 2026" },
+        { t: "TikTok sänder live", d: "FIFA ingår historiskt avtal – utvalda matcher och 'behind the scenes' kommer sändas direkt via TikTok-kreatörer.", tag: "MEDIA", date: "15 Jan 2026" }
+    ];
+
     const winChances = [
         { t: "Frankrike 🇫🇷", p: "18.5%", c: "Favorit" },
         { t: "Brasilien 🇧🇷", p: "15.2%", c: "Utmanare" },
         { t: "England 🏴󠁧󠁢󠁥󠁮󠁧󠁿", p: "14.8%", c: "Hög form" },
         { t: "Spanien 🇪🇸", p: "12.1%", c: "Ung talang" },
-        { t: "Argentina 🇦🇷", p: "10.5%", c: "Regerande mästare" },
-        { t: "Tyskland 🇩🇪", p: "8.2%", c: "Stark defensiv" },
+        { t: "Argentina 🇦🇷", p: "10.5%", c: "Mästare" },
+        { t: "Tyskland 🇩🇪", p: "8.2%", c: "Stabil" },
         { t: "Portugal 🇵🇹", p: "7.4%", c: "Bred trupp" }
     ];
 
@@ -171,12 +171,12 @@
     ];
 
     const worldGroups = {
-        "A": ["USA 🇺🇸", "Mexiko 🇲🇽", "Kanada 🇨🇦", "Panama 🇵🇦"],
-        "B": ["Frankrike 🇫🇷", "Sverige 🇸🇪", "Sydkorea 🇰🇷", "Mali 🇲🇱"],
-        "C": ["Brasilien 🇧🇷", "Japan 🇯🇵", "Norge 🇳🇴", "Ecuador 🇪🇨"],
-        "D": ["England 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Danmark 🇩🇰", "Australien 🇦🇺", "Peru 🇵🇪"],
-        "E": ["Argentina 🇦🇷", "Marocko 🇲🇦", "Polen 🇵🇱", "Uzbekistan 🇺🇿"],
-        "F": ["Spanien 🇪🇸", "Tyskland 🇩🇪", "Nigeria 🇳🇬", "Saudiarabien 🇸🇦"]
+        "A": ["Mexiko 🇲🇽", "Sydafrika 🇿🇦", "Sydkorea 🇰🇷", "Tjeckien 🇨🇿"],
+        "B": ["Kanada 🇨🇦", "Italien 🇮🇹", "Qatar 🇶🇦", "Schweiz 🇨🇭"],
+        "C": ["Brasilien 🇧🇷", "Marocko 🇲🇦", "Haiti 🇭🇹", "Skottland 🏴󠁧󠁢󠁳󠁣󠁴󠁿"],
+        "D": ["USA 🇺🇸", "Paraguay 🇵🇾", "Australien 🇦🇺", "Turkiet 🇹🇷"],
+        "E": ["Tyskland 🇩🇪", "Elfenbenskusten 🇨🇮", "Ecuador 🇪🇨", "Curaçao 🇨🇼"],
+        "F": ["Sverige/Ukraina 🇸🇪", "Polen 🇵🇱", "Nederländerna 🇳🇱", "Japan 🇯🇵"]
     };
 
     const topPlayers = [
@@ -187,47 +187,27 @@
         { n: "Federico Valverde", l: "🇺🇾" }, { n: "Gavi", l: "🇪🇸" }, { n: "William Saliba", l: "🇫🇷" }
     ];
 
-    const swedenPlayers = [
-        { n: "Alexander Isak", k: "Newcastle", s: "Stjärna" },
-        { n: "Dejan Kulusevski", k: "Tottenham", s: "Nyckelspelare" },
-        { n: "Viktor Gyökeres", k: "Sporting CP", s: "Målskytt" },
-        { n: "Lucas Bergvall", k: "Tottenham", s: "Genombrott" },
-        { n: "Hugo Larsson", k: "Frankfurt", s: "Navet" }
-    ];
-
     function render() {
-        // Topp 15
         document.getElementById('top-players-list').innerHTML = topPlayers.map((p, i) => `<tr><td class="rank">${i+1}</td><td>${p.n}</td><td>${p.l}</td></tr>`).join('');
-        
-        // Vinnarchans
         document.getElementById('win-list').innerHTML = winChances.map(w => `
             <div style="margin-bottom:15px">
                 <div style="display:flex; justify-content:space-between; margin-bottom:5px">
-                    <span>${w.t}</span><span style="color:var(--secondary); font-weight:800">${w.p}</span>
+                    <span>${w.t} (${w.c})</span><span style="color:var(--secondary); font-weight:800">${w.p}</span>
                 </div>
                 <div style="background:rgba(255,255,255,0.1); height:8px; border-radius:10px">
                     <div style="background:var(--primary); width:${w.p}; height:100%; border-radius:10px"></div>
                 </div>
             </div>
         `).join('');
-
-        // Mål & Assist
         document.getElementById('goal-table').innerHTML = goalScorers.map(s => `<tr><td>${s.n}</td><td>${s.l}</td><td style="color:var(--success)">${s.g}</td></tr>`).join('');
         document.getElementById('assist-table').innerHTML = assistKings.map(a => `<tr><td>${a.n}</td><td>${a.l}</td><td style="color:var(--primary)">${a.a}</td></tr>`).join('');
-
-        // Grupper
+        document.getElementById('global-news-list').innerHTML = globalNews.map(n => `<div class="card"><span class="news-date">${n.date}</span><span class="news-tag">${n.tag}</span><h3>${n.t}</h3><p>${n.d}</p></div>`).join('');
+        
         let groupHtml = '';
         for (const [key, teams] of Object.entries(worldGroups)) {
-            groupHtml += `
-                <div class="group-card">
-                    <div class="group-title">Grupp ${key}</div>
-                    ${teams.map(t => `<div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.02)">${t}</div>`).join('')}
-                </div>`;
+            groupHtml += `<div class="group-card"><div class="group-title">Grupp ${key}</div>${teams.map(t => `<div style="padding:4px 0; font-size:0.9rem">${t}</div>`).join('')}</div>`;
         }
         document.getElementById('group-container').innerHTML = groupHtml;
-
-        // Sverige
-        document.getElementById('sweden-players-list').innerHTML = swedenPlayers.map(p => `<tr><td><strong>${p.n}</strong></td><td>${p.k}</td><td style="color:var(--success)">${p.s}</td></tr>`).join('');
     }
 
     function showMainTab(tabId) {
@@ -235,8 +215,6 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         event.currentTarget.classList.add('active');
-
-        // Hantera undermenyer
         document.getElementById('sweden-sub-nav').style.display = (tabId === 'sweden-portal') ? 'flex' : 'none';
         document.getElementById('ai-sub-nav').style.display = (tabId === 'predictions') ? 'flex' : 'none';
     }
@@ -257,6 +235,5 @@
 
     window.onload = render;
 </script>
-
 </body>
 </html>
