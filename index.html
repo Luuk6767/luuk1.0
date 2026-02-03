@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WC2026 AI Portal - Grupper & Prognos</title>
+    <title>WC2026 AI Portal - Top 15 & Prognos</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,7 +12,7 @@
             --bg: #0b0f1a;
             --glass: rgba(30, 41, 59, 0.8);
             --text: #f8fafc;
-            --gold: #eab308;
+            --accent: #22d3ee;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -28,14 +28,14 @@
 
         header {
             width: 100%;
-            padding: 2.5rem 1rem;
+            padding: 2rem 1rem;
             text-align: center;
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             background: linear-gradient(to right, #818cf8, #c084fc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -55,7 +55,7 @@
         }
 
         .tab-btn {
-            padding: 10px 18px;
+            padding: 10px 20px;
             border: none;
             background: transparent;
             color: #94a3b8;
@@ -71,11 +71,11 @@
             color: white;
         }
 
-        /* Layout */
+        /* Content Layout */
         .content-section {
             display: none;
             width: 100%;
-            max-width: 1000px;
+            max-width: 900px;
             padding: 0 1rem 4rem;
             animation: fadeIn 0.4s ease;
         }
@@ -90,38 +90,19 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Groups Grid */
+        /* Player Table Custom Style */
+        .player-table { width: 100%; border-collapse: collapse; }
+        .player-table th { color: var(--accent); text-align: left; padding: 12px; font-size: 0.8rem; text-transform: uppercase; }
+        .player-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .rank { font-weight: 800; color: var(--secondary); width: 40px; }
+
+        /* Groups Layout */
         .groups-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
         }
-
-        .group-card {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 1rem;
-            border-top: 4px solid var(--primary);
-        }
-
-        .group-card h3 {
-            margin-bottom: 10px;
-            color: var(--secondary);
-            font-size: 1.1rem;
-        }
-
-        .group-list { list-style: none; }
-        .group-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Ratings Table */
-        table { width: 100%; border-collapse: collapse; }
-        td, th { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .badge { background: var(--gold); color: #000; padding: 3px 7px; border-radius: 5px; font-weight: 800; }
+        .group-box { background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border-left: 3px solid var(--primary); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
@@ -129,86 +110,101 @@
 <body>
 
     <header>
-        <h1>WC2026 AI Dashboard</h1>
+        <h1>World Cup 2026 AI Tracker</h1>
     </header>
 
     <div class="tab-container">
-        <button class="tab-btn active" onclick="openTab(event, 'groups')">Grupper</button>
+        <button class="tab-btn active" onclick="openTab(event, 'players')">Topp 15 Spelare</button>
         <button class="tab-btn" onclick="openTab(event, 'predictions')">AI Prognos</button>
-        <button class="tab-btn" onclick="openTab(event, 'ratings')">EA FC Ratings</button>
+        <button class="tab-btn" onclick="openTab(event, 'groups')">Grupper</button>
         <button class="tab-btn" onclick="openTab(event, 'news')">Nyheter</button>
     </div>
 
-    <section id="groups" class="content-section active">
-        <div class="groups-grid" id="groups-container">
-            </div>
+    <section id="players" class="content-section active">
+        <div class="card">
+            <h2 style="margin-bottom: 1rem;">Mästerskapets Största Profiler</h2>
+            <table class="player-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Namn</th>
+                        <th>Land</th>
+                        <th>Nyckelroll</th>
+                    </tr>
+                </thead>
+                <tbody id="player-list"></tbody>
+            </table>
+        </div>
     </section>
 
     <section id="predictions" class="content-section">
         <div id="prediction-list"></div>
     </section>
 
-    <section id="ratings" class="content-section">
-        <div class="card">
-            <table>
-                <thead><tr><th>Spelare</th><th>Klubb</th><th>Rating</th></tr></thead>
-                <tbody id="player-list"></tbody>
-            </table>
-        </div>
+    <section id="groups" class="content-section">
+        <div class="groups-grid" id="groups-list"></div>
     </section>
 
     <section id="news" class="content-section">
-        <div class="card"><h3>MetLife Stadium vald för finalen</h3><p>New Jersey/New York står som värd för den stora finalen den 19 juli 2026.</p></div>
-        <div class="card"><h3>Historiskt format</h3><p>48 lag, 12 grupper och en ny sextondelsfinal-runda introduceras.</p></div>
-    </section>
+        <div class="card"><h3>AI-domare i VAR-rummet</h3><p>FIFA bekräftar att helautomatiska offside-beslut kommer användas i alla 104 matcher.</p></div>
+    </header>
 
     <script>
+        const topPlayers = [
+            { name: "Kylian Mbappé", land: "🇫🇷 Frankrike", role: "Målskytt / Kapten" },
+            { name: "Jude Bellingham", land: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", role: "Spelmotor" },
+            { name: "Lamine Yamal", land: "🇪🇸 Spanien", role: "Kreativ Kraft" },
+            { name: "Vinícius Júnior", land: "🇧🇷 Brasilien", role: "Genombrott" },
+            { name: "Erling Haaland", land: "🇳🇴 Norge", role: "Avslutare" },
+            { name: "Jamal Musiala", land: "🇩🇪 Tyskland", role: "Dribbler" },
+            { name: "Rodri", land: "🇪🇸 Spanien", role: "Defensiv Stabilisator" },
+            { name: "Florian Wirtz", land: "🇩🇪 Tyskland", role: "Speluppbyggare" },
+            { name: "Bukayo Saka", land: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", role: "Ytterforward" },
+            { name: "Julian Alvarez", land: "🇦🇷 Argentina", role: "Anfallare" },
+            { name: "Rafael Leão", land: "🇵🇹 Portugal", role: "Snabbhet" },
+            { name: "Federico Valverde", land: "🇺🇾 Uruguay", role: "Tvåvägsmittfältare" },
+            { name: "Gavi", land: "🇪🇸 Spanien", role: "Aggressiv Spelfördelare" },
+            { name: "Alphonso Davies", land: "🇨🇦 Kanada", role: "Vänsterback / Profil" },
+            { name: "Lionel Messi", land: "🇦🇷 Argentina", role: "Sista Dansen" }
+        ];
+
         const groups = [
-            { name: "Grupp A", teams: ["🇺🇸 USA", "🇲🇽 Mexiko", "🇨🇦 Kanada", "🇵🇦 Panama"] },
-            { name: "Grupp B", teams: ["🇪🇸 Spanien", "🇭🇷 Kroatien", "🇲🇦 Marocko", "🇿🇦 Sydafrika"] },
-            { name: "Grupp C", teams: ["🇦🇷 Argentina", "🇵🇱 Polen", "🇸🇦 Saudiarabien", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Skottland"] },
-            { name: "Grupp D", teams: ["🇫🇷 Frankrike", "🇦🇺 Australien", "🇯🇵 Japan", "🇪🇨 Ecuador"] },
-            { name: "Grupp E", teams: ["🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", "🇩🇿 Algeriet", "🇰🇷 Sydkorea", "🇨🇱 Chile"] },
-            { name: "Grupp F", teams: ["🇩🇪 Tyskland", "🇺🇾 Uruguay", "🇳🇬 Nigeria", "🇮🇸 Island"] }
-        ];
-
-        const predictions = [
-            { team: "Spanien 🇪🇸", prob: 17.2 },
-            { team: "Frankrike 🇫🇷", prob: 14.8 },
-            { team: "England 🏴󠁧󠁢󠁥󠁮󠁧󠁿", prob: 12.1 },
-            { team: "Brasilien 🇧🇷", prob: 9.5 }
-        ];
-
-        const players = [
-            { name: "K. Mbappé", club: "Real Madrid", rating: 91 },
-            { name: "L. Yamal", club: "Barcelona", rating: 89 },
-            { name: "J. Bellingham", club: "Real Madrid", rating: 90 },
-            { name: "Vini Jr.", club: "Real Madrid", rating: 90 }
+            { name: "Grupp A", teams: ["USA", "Mexiko", "Kanada", "Panama"] },
+            { name: "Grupp B", teams: ["Spanien", "Kroatien", "Marocko", "Sydafrika"] },
+            { name: "Grupp C", teams: ["Argentina", "Polen", "Saudiarabien", "Skottland"] },
+            { name: "Grupp D", teams: ["Frankrike", "Australien", "Japan", "Ecuador"] }
         ];
 
         function renderAll() {
-            // Grupper
-            document.getElementById('groups-container').innerHTML = groups.map(g => `
-                <div class="group-card">
-                    <h3>${g.name}</h3>
-                    <ul class="group-list">${g.teams.map(t => `<li>${t}</li>`).join('')}</ul>
-                </div>
+            // Spelare
+            document.getElementById('player-list').innerHTML = topPlayers.map((p, i) => `
+                <tr>
+                    <td class="rank">${i + 1}</td>
+                    <td><strong>${p.name}</strong></td>
+                    <td>${p.land}</td>
+                    <td style="color: #94a3b8">${p.role}</td>
+                </tr>
             `).join('');
 
             // Prognos
-            document.getElementById('prediction-list').innerHTML = predictions.map(p => `
+            document.getElementById('prediction-list').innerHTML = [
+                {t: "Spanien 🇪🇸", p: 18}, {t: "Frankrike 🇫🇷", p: 15}, {t: "England 🏴󠁧󠁢󠁥󠁮󠁧󠁿", p: 12}
+            ].map(item => `
                 <div class="card">
-                    <strong>${p.team}</strong>
-                    <div style="height:10px; background:#1e293b; border-radius:5px; margin:10px 0;">
-                        <div style="width:${p.prob*4}%; height:100%; background:var(--primary); border-radius:5px;"></div>
+                    <strong>${item.t}</strong>
+                    <div style="height:8px; background:#1e293b; margin:10px 0; border-radius:4px;">
+                        <div style="width:${item.p * 5}%; height:100%; background:var(--primary); border-radius:4px;"></div>
                     </div>
-                    <span>AI Vinstchans: ${p.prob}%</span>
+                    <span>Sannolikhet: ${item.p}%</span>
                 </div>
             `).join('');
 
-            // Ratings
-            document.getElementById('player-list').innerHTML = players.map(p => `
-                <tr><td>${p.name}</td><td>${p.club}</td><td><span class="badge">${p.rating}</span></td></tr>
+            // Grupper
+            document.getElementById('groups-list').innerHTML = groups.map(g => `
+                <div class="group-box">
+                    <h3 style="margin-bottom:8px; font-size:1rem;">${g.name}</h3>
+                    <div style="font-size:0.9rem; color:#cbd5e1">${g.teams.join(', ')}</div>
+                </div>
             `).join('');
         }
 
