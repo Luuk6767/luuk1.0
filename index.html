@@ -3,41 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI World Cup 2026 Tracker</title>
-    <link rel="stylesheet" href="style.css">
+    <title>WC2026 AI Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --bg: #0f172a;
+            --glass: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #1e1b4b, var(--bg));
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Glassmorphism Header */
+        header {
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        /* Tab System */
+        .tab-container {
+            background: var(--glass);
+            padding: 5px;
+            border-radius: 15px;
+            display: flex;
+            gap: 5px;
+            margin: 2rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            padding: 0 1rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* AI Prediction Cards */
+        .ai-card {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .prob-bar {
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            width: 150px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .prob-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        /* News Cards */
+        .news-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--secondary);
+            transition: transform 0.2s;
+        }
+
+        .news-card:hover {
+            transform: scale(1.02);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+    </style>
 </head>
 <body>
+
     <header>
-        <h1>FIFA World Cup 2026 <span class="ai-tag">AI Insights</span></h1>
-        <p>Prognoser och nyheter drivna av artificiell intelligens</p>
+        <h1>World Cup 2026 Intelligence</h1>
+        <p>AI-drivna analyser för sommarens stora fest i USA, Kanada & Mexiko</p>
     </header>
 
-    <main class="container">
-        <section id="predictions">
-            <h2><span class="icon">🤖</span> AI-Prognos: Vem vinner?</h2>
-            <div class="prediction-card" id="top-prediction">
-                <div class="flag">🇪🇸</div>
-                <div class="info">
-                    <h3>Spanien</h3>
-                    <p>Sannolikhet att vinna: <strong>17.0%</strong></p>
-                    <div class="progress-bar"><div class="progress" style="width: 17%"></div></div>
-                </div>
-            </div>
-            <div class="prediction-grid">
-                <div class="mini-card"><span>🇫🇷</span> Frankrike: 14.1%</div>
-                <div class="mini-card"><span>🏴󠁧󠁢󠁥󠁮󠁧󠁿</span> England: 11.8%</div>
-                <div class="mini-card"><span>🇦🇷</span> Argentina: 8.7%</div>
-            </div>
-        </section>
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="openTab(event, 'predictions')">AI Prognos</button>
+        <button class="tab-btn" onclick="openTab(event, 'news')">Senaste Nytt</button>
+    </div>
 
-        <section id="news">
-            <h2><span class="icon">📰</span> Senaste VM-nyheterna</h2>
-            <div id="news-feed">
-                <p>Laddar senaste uppdateringarna om AI-avatarer och playoff-resultat...</p>
+    <section id="predictions" class="content-section active">
+        <div class="ai-card">
+            <div>
+                <h3>1. Spanien 🇪🇸</h3>
+                <p>AI-vinstchans: 18.4%</p>
+                <div class="prob-bar"><div class="prob-fill" style="width: 18.4%"></div></div>
             </div>
-        </section>
-    </main>
+            <div style="text-align: right">
+                <small>Formkurva</small>
+                <div style="color: #22c55e">↑ Toppform</div>
+            </div>
+        </div>
+        <div class="ai-card">
+            <div>
+                <h3>2. Frankrike 🇫🇷</h3>
+                <p>AI-vinstchans: 15.2%</p>
+                <div class="prob-bar"><div class="prob-fill" style="width: 15.2%"></div></div>
+            </div>
+            <div style="text-align: right">
+                <small>Formkurva</small>
+                <div style="color: #eab308">→ Stabil</div>
+            </div>
+        </div>
+        <div class="ai-card" style="opacity: 0.7">
+            <p><i>AI-analysen baseras på realtidsdata från kvalmatcher och spelarstatistik.</i></p>
+        </div>
+    </section>
 
-    <script src="script.js"></script>
+    <section id="news" class="content-section">
+        <div class="news-card">
+            <span class="tag">Just nu</span>
+            <h3>Logistik-planen klar för Aztecastadion</h3>
+            <p>Öppningsmatchen förväntas slå publikrekord. AI-simuleringar optimerar transportflöden för fansen.</p>
+        </div>
+        <div class="news-card">
+            <span class="tag">Truppnytt</span>
+            <h3>Sveriges unga stjärnskott hyllas av AI</h3>
+            <p>Datamodeller pekar ut Lucas Bergvall som en av turneringens potentiella genombrottsmän.</p>
+        </div>
+        <div class="news-card">
+            <span class="tag">Teknik</span>
+            <h3>Smart Ball 2.0 testas</h3>
+            <p>Den nya bollen skickar 500 datapunkter per sekund till VAR-rummet.</p>
+        </div>
+    </section>
+
+    <script>
+        function openTab(evt, tabName) {
+            // Dölj alla sektioner
+            const sections = document.getElementsByClassName("content-section");
+            for (let i = 0; i < sections.length; i++) {
+                sections[i].classList.remove("active");
+            }
+
+            // Avaktivera alla knappar
+            const buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+
+            // Visa vald sektion och aktivera knapp
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+
 </body>
 </html>
