@@ -1,0 +1,87 @@
+:root {
+    --primary: #00f2ff;
+    --accent: #7000ff;
+    --bg: #0b0e14;
+    --card-bg: rgba(255, 255, 255, 0.05);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: white;
+    margin: 0;
+    line-height: 1.6;
+}
+
+header {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #1a1a2e 0%, #0b0e14 100%);
+    border-bottom: 1px solid var(--card-bg);
+}
+
+.ai-tag {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+h2 { margin-bottom: 1.5rem; font-size: 1.5rem; }
+
+/* Predictions */
+.prediction-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+}
+
+.flag { font-size: 4rem; }
+
+.progress-bar {
+    background: #333;
+    height: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    width: 200px;
+}
+
+.progress {
+    background: var(--primary);
+    height: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+.prediction-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.mini-card {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* News Feed */
+.news-item {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--accent);
+}
