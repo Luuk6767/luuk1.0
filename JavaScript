@@ -1,0 +1,37 @@
+// Simulerad data för VM 2026 (baserat på aktuella trender)
+const vmNews = [
+    {
+        title: "FIFA bekräftar: AI-avatarer för alla 1 248 spelare",
+        desc: "Varje spelare får en 3D-modell för att optimera offside-beslut och sändningsgrafik.",
+        tag: "Teknik"
+    },
+    {
+        title: "Opta Supercomputer: Spanien favorit efter EM-form",
+        desc: "Med 17% vinstchans toppar de listan före Frankrike och England.",
+        tag: "AI Prognos"
+    },
+    {
+        title: "Sveriges väg till VM 2026",
+        desc: "Playoff väntar mot Ukraina på Strawberry Arena – AI ger Sverige 55% chans.",
+        tag: "Nyheter"
+    }
+];
+
+function loadNews() {
+    const feed = document.getElementById('news-feed');
+    feed.innerHTML = ''; // Rensa laddningsmeddelande
+
+    vmNews.forEach(news => {
+        const div = document.createElement('div');
+        div.className = 'news-item';
+        div.innerHTML = `
+            <small style="color: #7000ff">${news.tag}</small>
+            <h3>${news.title}</h3>
+            <p>${news.desc}</p>
+        `;
+        feed.appendChild(div);
+    });
+}
+
+// Kör funktionen när sidan laddats
+window.onload = loadNews;
