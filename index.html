@@ -1,54 +1,43 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
- <meta charset="UTF-8">
- <title>Axel F.s första Webb på Github</title>
-</head>
-<body>
- <h1>AI1 – Mitt projekt</h1>
- <p>Detta är en enkel webbsida publicerad januari med GitHub Pages.</p>
-<!DOCTYPE html>
-<html lang="sv">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Min Webbsida</title>
-    <style>
-        /* Här kan du lägga till enkel design (CSS) */
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f4f4f4;
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-        }
-    </style>
+    <title>AI World Cup 2026 Tracker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
-        <h1>Välkommen till min hemsida</h1>
+        <h1>FIFA World Cup 2026 <span class="ai-tag">AI Insights</span></h1>
+        <p>Prognoser och nyheter drivna av artificiell intelligens</p>
     </header>
 
-    <main>
-        <h2>Om sidan</h2>
-        <p>Det här är grundkoden för en enkel HTML-sida. Härifrån kan du börja bygga ut med mer innehåll.</p>
-        
-        <ul>
-            <li>Punkt 1</li>
-            <li>Punkt 2</li>
-            <li>Punkt 3</li>
-        </ul>
+    <main class="container">
+        <section id="predictions">
+            <h2><span class="icon">🤖</span> AI-Prognos: Vem vinner?</h2>
+            <div class="prediction-card" id="top-prediction">
+                <div class="flag">🇪🇸</div>
+                <div class="info">
+                    <h3>Spanien</h3>
+                    <p>Sannolikhet att vinna: <strong>17.0%</strong></p>
+                    <div class="progress-bar"><div class="progress" style="width: 17%"></div></div>
+                </div>
+            </div>
+            <div class="prediction-grid">
+                <div class="mini-card"><span>🇫🇷</span> Frankrike: 14.1%</div>
+                <div class="mini-card"><span>🏴󠁧󠁢󠁥󠁮󠁧󠁿</span> England: 11.8%</div>
+                <div class="mini-card"><span>🇦🇷</span> Argentina: 8.7%</div>
+            </div>
+        </section>
+
+        <section id="news">
+            <h2><span class="icon">📰</span> Senaste VM-nyheterna</h2>
+            <div id="news-feed">
+                <p>Laddar senaste uppdateringarna om AI-avatarer och playoff-resultat...</p>
+            </div>
+        </section>
     </main>
 
-    <footer>
-        <p>&copy; 2026 Min Webbsida</p>
-    </footer>
-
+    <script src="script.js"></script>
 </body>
 </html>
